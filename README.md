@@ -36,7 +36,7 @@ The Entity Relationship Diagram is available in /docs/RaceDay_ERD.png
 The full SQL script is available in /docs/RaceDay_Complete.sql
 
 ## CI/CD
-![CI/CD Build](docs/ci-screenshot.png)
+![CI/CD Build]:(docs/ci-screenshot.png)
 
 ## Video Presentation
 [RaceDay System Walkthrough]:
