@@ -1,0 +1,163 @@
+RACEDAY API ENDPOINT PLAN
+==========================
+
+1. AUTH ENDPOINTS
+-----------------
+Method: POST
+Route: /api/auth/register
+Description: Register a new user (Organiser or Participant)
+Role Required: Public
+Request Body: { "firstName": "string", "lastName": "string", "email": "string", "password": "string", "role": "Organiser|Participant" }
+Expected Response: 201 - { "message": "User registered successfully", "userId": 1 }
+
+Method: POST
+Route: /api/auth/login
+Description: Login and receive a token
+Role Required: Public
+Request Body: { "email": "string", "password": "string" }
+Expected Response: 200 - { "token": "jwt_token", "role": "Organiser|Participant" }
+
+2. ORGANISER ENDPOINTS
+-----------------------
+Method: GET
+Route: /api/organisers
+Description: Get all organisers
+Role Required: Organiser
+Request Body: None
+Expected Response: 200 - [ { "organiserID": 1, "firstName": "John", "organisationName": "Cape Town Running Club" } ]
+
+Method: GET
+Route: /api/organisers/:id
+Description: Get a single organiser by ID
+Role Required: Organiser
+Request Body: None
+Expected Response: 200 - { "organiserID": 1, "firstName": "John", "email": "john@raceday.com" }
+
+Method: PUT
+Route: /api/organisers/:id
+Description: Update organiser details
+Role Required: Organiser
+Request Body: { "firstName": "string", "lastName": "string", "phone": "string" }
+Expected Response: 200 - { "message": "Organiser updated successfully" }
+
+3. PARTICIPANT ENDPOINTS
+-------------------------
+Method: GET
+Route: /api/participants
+Description: Get all participants
+Role Required: Organiser
+Request Body: None
+Expected Response: 200 - [ { "participantID": 1, "firstName": "Michael", "email": "michael@gmail.com" } ]
+
+Method: GET
+Route: /api/participants/:id
+Description: Get a single participant by ID
+Role Required: Organiser|Participant
+Request Body: None
+Expected Response: 200 - { "participantID": 1, "firstName": "Michael", "dateOfBirth": "1990-05-15" }
+
+Method: PUT
+Route: /api/participants/:id
+Description: Update participant details
+Role Required: Participant
+Request Body: { "firstName": "string", "lastName": "string", "phone": "string" }
+Expected Response: 200 - { "message": "Participant updated successfully" }
+
+4. EVENT ENDPOINTS
+-------------------
+Method: GET
+Route: /api/events
+Description: Get all events
+Role Required: Public
+Request Body: None
+Expected Response: 200 - [ { "eventID": 1, "eventName": "Cape Town Spring Race", "eventDate": "2026-10-15" } ]
+
+Method: GET
+Route: /api/events/:id
+Description: Get a single event by ID
+Role Required: Public
+Request Body: None
+Expected Response: 200 - { "eventID": 1, "eventName": "Cape Town Spring Race", "location": "Cape Town", "maxParticipants": 500 }
+
+Method: POST
+Route: /api/events
+Description: Create a new event
+Role Required: Organiser
+Request Body: { "eventName": "string", "eventDate": "date", "location": "string", "maxParticipants": "int", "organiserID": "int" }
+Expected Response: 201 - { "message": "Event created successfully", "eventID": 4 }
+
+Method: PUT
+Route: /api/events/:id
+Description: Update an event
+Role Required: Organiser
+Request Body: { "eventName": "string", "eventDate": "date", "location": "string" }
+Expected Response: 200 - { "message": "Event updated successfully" }
+
+Method: DELETE
+Route: /api/events/:id
+Description: Delete an event
+Role Required: Organiser
+Request Body: None
+Expected Response: 200 - { "message": "Event deleted successfully" }
+
+5. CATEGORY ENDPOINTS
+----------------------
+Method: GET
+Route: /api/categories
+Description: Get all categories
+Role Required: Public
+Request Body: None
+Expected Response: 200 - [ { "categoryID": 1, "categoryName": "5KM Fun Run", "distance": 5.00 } ]
+
+Method: POST
+Route: /api/categories
+Description: Create a new category
+Role Required: Organiser
+Request Body: { "categoryName": "string", "distance": "decimal", "description": "string" }
+Expected Response: 201 - { "message": "Category created successfully", "categoryID": 4 }
+
+6. ENROLMENT ENDPOINTS
+-----------------------
+Method: GET
+Route: /api/enrolments
+Description: Get all enrolments
+Role Required: Organiser
+Request Body: None
+Expected Response: 200 - [ { "enrolmentID": 1, "participantID": 1, "eventID": 1, "status": "Registered" } ]
+
+Method: POST
+Route: /api/enrolments
+Description: Enrol a participant in an event
+Role Required: Participant
+Request Body: { "participantID": "int", "eventID": "int", "categoryID": "int" }
+Expected Response: 201 - { "message": "Enrolment successful", "enrolmentID": 7 }
+
+Method: DELETE
+Route: /api/enrolments/:id
+Description: Cancel an enrolment
+Role Required: Participant
+Request Body: None
+Expected Response: 200 - { "message": "Enrolment cancelled successfully" }
+
+7. RESULTS ENDPOINTS
+---------------------
+Method: GET
+Route: /api/results
+Description: Get all results
+Role Required: Public
+Request Body: None
+Expected Response: 200 - [ { "resultID": 1, "enrolmentID": 1, "finishTime": "00:32:15", "position": 1 } ]
+
+Method: POST
+Route: /api/results
+Description: Add a result for an enrolment
+Role Required: Organiser
+Request Body: { "enrolmentID": "int", "finishTime": "time", "position": "int", "notes": "string" }
+Expected Response: 201 - { "message": "Result added successfully", "resultID": 4 }
+
+Method: GET
+Route: /api/results/:id
+Description: Get result by ID
+Role Required: Public
+Request Body: None
+Expected Response: 200 - { "resultID": 1, "finishTime": "00:32:15", "position": 1, "notes": "Personal Best" }
