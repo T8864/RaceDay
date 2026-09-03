@@ -3,161 +3,271 @@ RACEDAY API ENDPOINT PLAN
 
 1. AUTH ENDPOINTS
 -----------------
+
 Method: POST
 Route: /api/auth/register
-Description: Register a new user (Organiser or Participant)
+Description: Register a new user as either an Organiser or Participant
 Role Required: Public
 Request Body: { "firstName": "string", "lastName": "string", "email": "string", "password": "string", "role": "Organiser|Participant" }
-Expected Response: 201 - { "message": "User registered successfully", "userId": 1 }
+Expected Response:
+  201 - { "message": "User registered successfully", "userId": 1 }
+  400 - { "message": "Validation error - all fields are required" }
+  409 - { "message": "Email already exists" }
 
 Method: POST
 Route: /api/auth/login
-Description: Login and receive a token
+Description: Login with email and password and receive a JWT token
 Role Required: Public
 Request Body: { "email": "string", "password": "string" }
-Expected Response: 200 - { "token": "jwt_token", "role": "Organiser|Participant" }
+Expected Response:
+  200 - { "token": "jwt_token", "role": "Organiser|Participant" }
+  401 - { "message": "Invalid email or password" }
+  400 - { "message": "Email and password are required" }
 
 2. ORGANISER ENDPOINTS
 -----------------------
+
 Method: GET
 Route: /api/organisers
-Description: Get all organisers
+Description: Get a list of all organisers in the system
 Role Required: Organiser
 Request Body: None
-Expected Response: 200 - [ { "organiserID": 1, "firstName": "John", "organisationName": "Cape Town Running Club" } ]
+Expected Response:
+  200 - [ { "organiserID": 1, "firstName": "John", "organisationName": "Cape Town Running Club" } ]
+  401 - { "message": "Unauthorised - login required" }
+  403 - { "message": "Forbidden - Organiser role required" }
 
 Method: GET
 Route: /api/organisers/:id
-Description: Get a single organiser by ID
+Description: Get a single organiser by their ID
 Role Required: Organiser
 Request Body: None
-Expected Response: 200 - { "organiserID": 1, "firstName": "John", "email": "john@raceday.com" }
+Expected Response:
+  200 - { "organiserID": 1, "firstName": "John", "email": "john@raceday.com", "organisationName": "Cape Town Running Club" }
+  404 - { "message": "Organiser not found" }
+  401 - { "message": "Unauthorised - login required" }
 
 Method: PUT
 Route: /api/organisers/:id
-Description: Update organiser details
+Description: Update an organiser's details
 Role Required: Organiser
-Request Body: { "firstName": "string", "lastName": "string", "phone": "string" }
-Expected Response: 200 - { "message": "Organiser updated successfully" }
+Request Body: { "firstName": "string", "lastName": "string", "phone": "string", "organisationName": "string" }
+Expected Response:
+  200 - { "message": "Organiser updated successfully" }
+  400 - { "message": "Validation error - invalid fields" }
+  404 - { "message": "Organiser not found" }
+  403 - { "message": "Forbidden - you can only update your own profile" }
 
 3. PARTICIPANT ENDPOINTS
 -------------------------
+
 Method: GET
 Route: /api/participants
-Description: Get all participants
+Description: Get a list of all participants in the system
 Role Required: Organiser
 Request Body: None
-Expected Response: 200 - [ { "participantID": 1, "firstName": "Michael", "email": "michael@gmail.com" } ]
+Expected Response:
+  200 - [ { "participantID": 1, "firstName": "Michael", "email": "michael@gmail.com" } ]
+  401 - { "message": "Unauthorised - login required" }
+  403 - { "message": "Forbidden - Organiser role required" }
 
 Method: GET
 Route: /api/participants/:id
-Description: Get a single participant by ID
+Description: Get a single participant by their ID
 Role Required: Organiser|Participant
 Request Body: None
-Expected Response: 200 - { "participantID": 1, "firstName": "Michael", "dateOfBirth": "1990-05-15" }
+Expected Response:
+  200 - { "participantID": 1, "firstName": "Michael", "email": "michael@gmail.com", "dateOfBirth": "1990-05-15" }
+  404 - { "message": "Participant not found" }
+  401 - { "message": "Unauthorised - login required" }
 
 Method: PUT
 Route: /api/participants/:id
-Description: Update participant details
+Description: Update a participant's details
 Role Required: Participant
 Request Body: { "firstName": "string", "lastName": "string", "phone": "string" }
-Expected Response: 200 - { "message": "Participant updated successfully" }
+Expected Response:
+  200 - { "message": "Participant updated successfully" }
+  400 - { "message": "Validation error - invalid fields" }
+  404 - { "message": "Participant not found" }
+  403 - { "message": "Forbidden - you can only update your own profile" }
 
 4. EVENT ENDPOINTS
 -------------------
+
 Method: GET
 Route: /api/events
-Description: Get all events
+Description: Get a list of all upcoming race events
 Role Required: Public
 Request Body: None
-Expected Response: 200 - [ { "eventID": 1, "eventName": "Cape Town Spring Race", "eventDate": "2026-10-15" } ]
+Expected Response:
+  200 - [ { "eventID": 1, "eventName": "Cape Town Spring Race", "eventDate": "2026-10-15", "location": "Cape Town" } ]
 
 Method: GET
 Route: /api/events/:id
-Description: Get a single event by ID
+Description: Get the details of a specific event by ID
 Role Required: Public
 Request Body: None
-Expected Response: 200 - { "eventID": 1, "eventName": "Cape Town Spring Race", "location": "Cape Town", "maxParticipants": 500 }
+Expected Response:
+  200 - { "eventID": 1, "eventName": "Cape Town Spring Race", "eventDate": "2026-10-15", "location": "Cape Town", "maxParticipants": 500 }
+  404 - { "message": "Event not found" }
 
 Method: POST
 Route: /api/events
-Description: Create a new event
+Description: Create a new race event
 Role Required: Organiser
 Request Body: { "eventName": "string", "eventDate": "date", "location": "string", "maxParticipants": "int", "organiserID": "int" }
-Expected Response: 201 - { "message": "Event created successfully", "eventID": 4 }
+Expected Response:
+  201 - { "message": "Event created successfully", "eventID": 4 }
+  400 - { "message": "Validation error - all fields are required" }
+  403 - { "message": "Forbidden - Organiser role required" }
 
 Method: PUT
 Route: /api/events/:id
-Description: Update an event
+Description: Update an existing race event
 Role Required: Organiser
-Request Body: { "eventName": "string", "eventDate": "date", "location": "string" }
-Expected Response: 200 - { "message": "Event updated successfully" }
+Request Body: { "eventName": "string", "eventDate": "date", "location": "string", "maxParticipants": "int" }
+Expected Response:
+  200 - { "message": "Event updated successfully" }
+  400 - { "message": "Validation error - invalid fields" }
+  404 - { "message": "Event not found" }
+  403 - { "message": "Forbidden - you can only update your own events" }
 
 Method: DELETE
 Route: /api/events/:id
-Description: Delete an event
+Description: Delete a race event
 Role Required: Organiser
 Request Body: None
-Expected Response: 200 - { "message": "Event deleted successfully" }
+Expected Response:
+  200 - { "message": "Event deleted successfully" }
+  404 - { "message": "Event not found" }
+  403 - { "message": "Forbidden - you can only delete your own events" }
 
 5. CATEGORY ENDPOINTS
 ----------------------
+
 Method: GET
 Route: /api/categories
-Description: Get all categories
+Description: Get a list of all race categories
 Role Required: Public
 Request Body: None
-Expected Response: 200 - [ { "categoryID": 1, "categoryName": "5KM Fun Run", "distance": 5.00 } ]
+Expected Response:
+  200 - [ { "categoryID": 1, "categoryName": "5KM Fun Run", "distance": 5.00 } ]
 
 Method: POST
 Route: /api/categories
-Description: Create a new category
+Description: Create a new race category
 Role Required: Organiser
 Request Body: { "categoryName": "string", "distance": "decimal", "description": "string" }
-Expected Response: 201 - { "message": "Category created successfully", "categoryID": 4 }
+Expected Response:
+  201 - { "message": "Category created successfully", "categoryID": 4 }
+  400 - { "message": "Validation error - all fields are required" }
+  403 - { "message": "Forbidden - Organiser role required" }
+
+Method: PUT
+Route: /api/categories/:id
+Description: Update an existing race category
+Role Required: Organiser
+Request Body: { "categoryName": "string", "distance": "decimal", "description": "string" }
+Expected Response:
+  200 - { "message": "Category updated successfully" }
+  400 - { "message": "Validation error - invalid fields" }
+  404 - { "message": "Category not found" }
+  403 - { "message": "Forbidden - Organiser role required" }
+
+Method: DELETE
+Route: /api/categories/:id
+Description: Delete a race category
+Role Required: Organiser
+Request Body: None
+Expected Response:
+  200 - { "message": "Category deleted successfully" }
+  404 - { "message": "Category not found" }
+  403 - { "message": "Forbidden - Organiser role required" }
 
 6. ENROLMENT ENDPOINTS
 -----------------------
+
 Method: GET
 Route: /api/enrolments
-Description: Get all enrolments
+Description: Get a list of all enrolments in the system
 Role Required: Organiser
 Request Body: None
-Expected Response: 200 - [ { "enrolmentID": 1, "participantID": 1, "eventID": 1, "status": "Registered" } ]
+Expected Response:
+  200 - [ { "enrolmentID": 1, "participantID": 1, "eventID": 1, "categoryID": 1, "status": "Registered" } ]
+  401 - { "message": "Unauthorised - login required" }
+  403 - { "message": "Forbidden - Organiser role required" }
+
+Method: GET
+Route: /api/enrolments/:id
+Description: Get a single enrolment by ID
+Role Required: Organiser|Participant
+Request Body: None
+Expected Response:
+  200 - { "enrolmentID": 1, "participantID": 1, "eventID": 1, "status": "Registered" }
+  404 - { "message": "Enrolment not found" }
+  401 - { "message": "Unauthorised - login required" }
 
 Method: POST
 Route: /api/enrolments
-Description: Enrol a participant in an event
+Description: Enrol a participant in a race event under a specific category
 Role Required: Participant
 Request Body: { "participantID": "int", "eventID": "int", "categoryID": "int" }
-Expected Response: 201 - { "message": "Enrolment successful", "enrolmentID": 7 }
+Expected Response:
+  201 - { "message": "Enrolment successful", "enrolmentID": 7 }
+  400 - { "message": "Event is fully booked" }
+  409 - { "message": "Participant is already enrolled in this event" }
+  403 - { "message": "Forbidden - Participant role required" }
 
 Method: DELETE
 Route: /api/enrolments/:id
-Description: Cancel an enrolment
+Description: Cancel an existing enrolment
 Role Required: Participant
 Request Body: None
-Expected Response: 200 - { "message": "Enrolment cancelled successfully" }
+Expected Response:
+  200 - { "message": "Enrolment cancelled successfully" }
+  404 - { "message": "Enrolment not found" }
+  403 - { "message": "Forbidden - you can only cancel your own enrolment" }
 
 7. RESULTS ENDPOINTS
 ---------------------
+
 Method: GET
 Route: /api/results
-Description: Get all results
+Description: Get a list of all race results
 Role Required: Public
 Request Body: None
-Expected Response: 200 - [ { "resultID": 1, "enrolmentID": 1, "finishTime": "00:32:15", "position": 1 } ]
-
-Method: POST
-Route: /api/results
-Description: Add a result for an enrolment
-Role Required: Organiser
-Request Body: { "enrolmentID": "int", "finishTime": "time", "position": "int", "notes": "string" }
-Expected Response: 201 - { "message": "Result added successfully", "resultID": 4 }
+Expected Response:
+  200 - [ { "resultID": 1, "enrolmentID": 1, "finishTime": "00:32:15", "position": 1 } ]
 
 Method: GET
 Route: /api/results/:id
-Description: Get result by ID
+Description: Get a single result by ID
 Role Required: Public
 Request Body: None
-Expected Response: 200 - { "resultID": 1, "finishTime": "00:32:15", "position": 1, "notes": "Personal Best" }
+Expected Response:
+  200 - { "resultID": 1, "finishTime": "00:32:15", "position": 1, "notes": "Personal Best" }
+  404 - { "message": "Result not found" }
+
+Method: POST
+Route: /api/results
+Description: Add a race result for a participant enrolment
+Role Required: Organiser
+Request Body: { "enrolmentID": "int", "finishTime": "time", "position": "int", "notes": "string" }
+Expected Response:
+  201 - { "message": "Result added successfully", "resultID": 4 }
+  400 - { "message": "Validation error - all fields are required" }
+  404 - { "message": "Enrolment not found" }
+  409 - { "message": "Result already exists for this enrolment" }
+  403 - { "message": "Forbidden - Organiser role required" }
+
+Method: PUT
+Route: /api/results/:id
+Description: Update an existing race result
+Role Required: Organiser
+Request Body: { "finishTime": "time", "position": "int", "notes": "string" }
+Expected Response:
+  200 - { "message": "Result updated successfully" }
+  400 - { "message": "Validation error - invalid fields" }
+  404 - { "message": "Result not found" }
+  403 - { "message": "Forbidden - Organiser role required" }
