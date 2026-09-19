@@ -39,4 +39,4 @@ The full SQL script is available in /docs/RaceDay_Complete.sql
 ![CI/CD Build]:(docs/ci-screenshot.png)
 
 ## Video Presentation
-[RaceDay System Walkthrough]:
+[RaceDay System Walkthrough]:https://youtu.be/rFgvlj5-8RY?si=r1GDu5rAhhjI_Na1
