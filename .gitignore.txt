@@ -23,3 +23,9 @@ project.lock.json
 # OS files
 .DS_Store
 Thumbs.db
+
+# Visual Studio lock files
+*.vsidx
+*.v2
+*.suo
+*.lock
