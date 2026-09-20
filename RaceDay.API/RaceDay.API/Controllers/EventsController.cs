@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using System.Security.Claims;
 
 namespace RaceDay.API.Controllers
 {
@@ -46,13 +48,10 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Create([FromBody] CreateEventDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
-            var userID = HttpContext.Session.GetInt32("UserID");
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var newEvent = new Event
             {
@@ -63,7 +62,7 @@ namespace RaceDay.API.Controllers
                 RouteDescription = dto.RouteDescription,
                 MaxParticipants = dto.MaxParticipants,
                 CategoryID = dto.CategoryID,
-                OrganiserID = userID!.Value
+                OrganiserID = userID
             };
 
             _context.Events.Add(newEvent);
@@ -73,15 +72,17 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Update(int id, [FromBody] UpdateEventDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var e = _context.Events.FirstOrDefault(e => e.EventID == id);
             if (e == null)
                 return NotFound(new { message = "Event not found" });
+
+            if (e.OrganiserID != userID)
+                return StatusCode(403, new { message = "Forbidden - you can only update your own events" });
 
             e.EventName = dto.EventName ?? e.EventName;
             e.EventDate = dto.EventDate ?? e.EventDate;
@@ -96,15 +97,17 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Delete(int id)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var e = _context.Events.FirstOrDefault(e => e.EventID == id);
             if (e == null)
                 return NotFound(new { message = "Event not found" });
+
+            if (e.OrganiserID != userID)
+                return StatusCode(403, new { message = "Forbidden - you can only delete your own events" });
 
             _context.Events.Remove(e);
             _context.SaveChanges();

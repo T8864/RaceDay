@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using System.Security.Claims;
 
 namespace RaceDay.API.Controllers
 {
@@ -43,11 +45,10 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpGet("my")]
+        [Authorize(Roles = "Participant")]
         public IActionResult GetMyResults()
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var results = _context.Results
                 .Where(r => r.Enrolment.UserID == userID)
@@ -65,12 +66,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Create([FromBody] CreateResultDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var enrolment = _context.Enrolments.FirstOrDefault(e => e.EnrolmentID == dto.EnrolmentID);
             if (enrolment == null)
                 return NotFound(new { message = "Enrolment not found" });
@@ -82,7 +80,7 @@ namespace RaceDay.API.Controllers
             var result = new Result
             {
                 EnrolmentID = dto.EnrolmentID,
-                FinishTime = dto.FinishTime,
+                FinishTime = dto.FinishTime ?? string.Empty,
                 PositionOverall = dto.PositionOverall,
                 PositionCategory = dto.PositionCategory,
                 Notes = dto.Notes
@@ -95,12 +93,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Update(int id, [FromBody] CreateResultDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var result = _context.Results.FirstOrDefault(r => r.ResultID == id);
             if (result == null)
                 return NotFound(new { message = "Result not found" });

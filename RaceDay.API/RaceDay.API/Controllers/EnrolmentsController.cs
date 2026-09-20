@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using System.Security.Claims;
 
 namespace RaceDay.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class EnrolmentsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,12 +20,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Organiser")]
         public IActionResult GetAll()
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var enrolments = _context.Enrolments.Select(e => new
             {
                 e.EnrolmentID,
@@ -39,23 +39,24 @@ namespace RaceDay.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var role = User.FindFirstValue(ClaimTypes.Role);
 
             var enrolment = _context.Enrolments.FirstOrDefault(e => e.EnrolmentID == id);
             if (enrolment == null)
                 return NotFound(new { message = "Enrolment not found" });
 
+            if (role != "Organiser" && enrolment.UserID != userID)
+                return StatusCode(403, new { message = "Forbidden - you can only view your own enrolments" });
+
             return Ok(enrolment);
         }
 
         [HttpGet("my")]
+        [Authorize(Roles = "Participant")]
         public IActionResult GetMyEnrolments()
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var enrolments = _context.Enrolments
                 .Where(e => e.UserID == userID)
@@ -72,13 +73,10 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Participant")]
         public IActionResult Enrol([FromBody] CreateEnrolmentDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Participant")
-                return StatusCode(403, new { message = "Forbidden - Participant role required" });
-
-            var userID = HttpContext.Session.GetInt32("UserID");
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var existing = _context.Enrolments
                 .FirstOrDefault(e => e.UserID == userID && e.EventID == dto.EventID);
@@ -95,7 +93,7 @@ namespace RaceDay.API.Controllers
 
             var enrolment = new Enrolment
             {
-                UserID = userID!.Value,
+                UserID = userID,
                 EventID = dto.EventID,
                 CategoryID = dto.CategoryID,
                 Status = "Confirmed"
@@ -108,11 +106,10 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Participant")]
         public IActionResult Cancel(int id)
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var enrolment = _context.Enrolments.FirstOrDefault(e => e.EnrolmentID == id);
             if (enrolment == null)

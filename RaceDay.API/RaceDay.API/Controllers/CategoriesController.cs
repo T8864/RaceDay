@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
@@ -40,12 +41,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Create([FromBody] CreateCategoryDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var category = new Category
             {
                 CategoryName = dto.CategoryName,
@@ -59,12 +57,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Update(int id, [FromBody] CreateCategoryDto dto)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var category = _context.Categories.FirstOrDefault(c => c.CategoryID == id);
             if (category == null)
                 return NotFound(new { message = "Category not found" });
@@ -78,12 +73,9 @@ namespace RaceDay.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Organiser")]
         public IActionResult Delete(int id)
         {
-            var role = HttpContext.Session.GetString("Role");
-            if (role != "Organiser")
-                return StatusCode(403, new { message = "Forbidden - Organiser role required" });
-
             var category = _context.Categories.FirstOrDefault(c => c.CategoryID == id);
             if (category == null)
                 return NotFound(new { message = "Category not found" });

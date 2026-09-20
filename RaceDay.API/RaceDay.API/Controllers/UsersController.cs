@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.DTOs;
+using System.Security.Claims;
 
 namespace RaceDay.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -18,9 +21,7 @@ namespace RaceDay.API.Controllers
         [HttpGet("profile")]
         public IActionResult GetProfile()
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var user = _context.Users.FirstOrDefault(u => u.UserID == userID);
             if (user == null)
@@ -41,9 +42,7 @@ namespace RaceDay.API.Controllers
         [HttpPut("profile")]
         public IActionResult UpdateProfile([FromBody] UpdateProfileDto dto)
         {
-            var userID = HttpContext.Session.GetInt32("UserID");
-            if (userID == null)
-                return Unauthorized(new { message = "Login required" });
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
             var user = _context.Users.FirstOrDefault(u => u.UserID == userID);
             if (user == null)
