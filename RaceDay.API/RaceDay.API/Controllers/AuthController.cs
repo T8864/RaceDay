@@ -2,6 +2,7 @@
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using RaceDay.API.Services;
 using BCrypt.Net;
 
 namespace RaceDay.API.Controllers
@@ -11,10 +12,12 @@ namespace RaceDay.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly JwtService _jwtService;
 
-        public AuthController(AppDbContext context)
+        public AuthController(AppDbContext context, JwtService jwtService)
         {
             _context = context;
+            _jwtService = jwtService;
         }
 
         [HttpPost("register")]
@@ -22,6 +25,9 @@ namespace RaceDay.API.Controllers
         {
             if (_context.Users.Any(u => u.Email == dto.Email))
                 return BadRequest(new { message = "Email already exists" });
+
+            if (dto.Role != "Organiser" && dto.Role != "Participant")
+                return BadRequest(new { message = "Role must be Organiser or Participant" });
 
             var user = new User
             {
@@ -47,17 +53,14 @@ namespace RaceDay.API.Controllers
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized(new { message = "Invalid email or password" });
 
-            HttpContext.Session.SetInt32("UserID", user.UserID);
-            HttpContext.Session.SetString("Role", user.Role);
-            HttpContext.Session.SetString("Email", user.Email);
+            var token = _jwtService.CreateToken(user);
 
-            return Ok(new { message = "Login successful", role = user.Role, userId = user.UserID });
+            return Ok(new { message = "Login successful", token = token, role = user.Role, userId = user.UserID });
         }
 
         [HttpPost("logout")]
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
             return Ok(new { message = "Logged out successfully" });
         }
     }
