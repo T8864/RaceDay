@@ -14,11 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Validate docs folder
-        run: |
-          echo "Checking docs folder..."
-          ls docs/
-          echo "All required files present!"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore RaceDay.API/RaceDay.API.sln
+
+      - name: Build
+        run: dotnet build RaceDay.API/RaceDay.API.sln --no-restore
+
+      - name: Run tests
+        run: dotnet test RaceDay.API/RaceDay.API.sln --no-build --verbosity normal
 
       - name: CI Build passed
-        run: echo "RaceDay CI build completed successfully!"
+        run: echo "RaceDay CI build and all tests completed successfully!"
