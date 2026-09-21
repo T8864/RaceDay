@@ -140,3 +140,4 @@ C:\Users\Student\Documents\GitHub\RaceDay\RaceDay.API\RaceDay.API\obj\Debug\net8
 C:\Users\Student\Documents\GitHub\RaceDay\RaceDay.API\RaceDay.API\obj\Debug\net8.0\RaceDay.API.genruntimeconfig.cache
 C:\Users\Student\Documents\GitHub\RaceDay\RaceDay.API\RaceDay.API\obj\Debug\net8.0\ref\RaceDay.API.dll
 C:\Users\Student\Documents\GitHub\RaceDay\RaceDay.API\RaceDay.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Student\Documents\GitHub\RaceDay\RaceDay.API\RaceDay.API\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll

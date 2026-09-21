@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3+Lx50d8xls=",
+  "dgSpecHash": "Bmu5rbn8JBI=",
   "success": true,
   "projectFilePath": "C:\\Users\\Student\\Documents\\GitHub\\RaceDay\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
   "expectedPackageFiles": [
@@ -21,6 +21,7 @@
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.0\\microsoft.entityframeworkcore.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.0\\microsoft.entityframeworkcore.analyzers.8.0.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.0\\microsoft.entityframeworkcore.design.8.0.0.nupkg.sha512",
+    "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.inmemory\\8.0.0\\microsoft.entityframeworkcore.inmemory.8.0.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.0\\microsoft.entityframeworkcore.relational.8.0.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\8.0.0\\microsoft.entityframeworkcore.sqlserver.8.0.0.nupkg.sha512",
     "C:\\Users\\Student\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.0\\microsoft.entityframeworkcore.tools.8.0.0.nupkg.sha512",
