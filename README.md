@@ -21,7 +21,6 @@ RaceDay is a web-based race event management system built with ASP.NET Core Web 
 
 ## Project Structure
 /docs
-
 RaceDay_Complete.sql (Part 1 SQL script)
 RaceDay_SeedData.sql (Seed data script)
 RaceDay_API_Endpoints.txt (API endpoint plan)
@@ -29,7 +28,6 @@ RaceDay_ERD.png (Entity Relationship Diagram)
 ci-screenshot.png (CI/CD green build screenshot)
 
 /RaceDay.API
-
 Controllers/ (API controllers)
 Models/ (Entity models)
 DTOs/ (Data transfer objects)
@@ -37,8 +35,8 @@ Data/ (Database context)
 Services/ (JWT service)
 
 /RaceDay.Tests
-
 Unit tests for Auth, Events and Enrolments
+
 
 ## Setup Instructions
 1. Clone the repository
@@ -55,7 +53,7 @@ The API uses JWT Bearer authentication. To access protected endpoints:
 4. All protected endpoints will now be accessible based on your role
 
 ## CI/CD
-![CI/CD Build](docs/ci-screenshot.png)
+![CI Build](docs/ci-screenshot.png)
 
 ## Video Presentation
-[RaceDay System Walkthrough]()
+[RaceDay System Walkthrough](https://youtu.be/NAD16ToIAAU?si=o-AFuiEPJMGqSE36)
