@@ -20,8 +20,7 @@ namespace RaceDay.API.Models
         public string Location { get; set; } = string.Empty;
 
         [Required]
-        [MaxLength(50)]
-        public string Distance { get; set; } = string.Empty;
+        public double Distance { get; set; }
 
         [MaxLength(500)]
         public string? RouteDescription { get; set; }

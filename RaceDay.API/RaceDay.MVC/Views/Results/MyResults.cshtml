@@ -1,0 +1,37 @@
+﻿@model List<RaceDay.MVC.Models.ResultViewModel>
+@{
+    ViewData["Title"] = "My Results";
+}
+
+<h3 class="fw-bold mb-3">My Results</h3>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No results available yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Event</th>
+                    <th>Finish Time</th>
+                    <th>Position</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@r.EventName</td>
+                        <td>@r.FinishTime</td>
+                        <td>@r.Position</td>
+                        <td>@r.Notes</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

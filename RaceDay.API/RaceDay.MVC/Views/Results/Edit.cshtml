@@ -1,0 +1,42 @@
+﻿@model RaceDay.MVC.Models.ResultFormViewModel
+@{
+    ViewData["Title"] = "Edit Result";
+}
+
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Edit Result</h4>
+    </div>
+    <div class="card-body p-4">
+        <form asp-action="Edit" asp-route-id="@Model.ResultID" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="mb-3">
+                <label asp-for="FinishTime" class="form-label"></label>
+                <input asp-for="FinishTime" class="form-control" placeholder="e.g. 01:23:45" />
+                <span asp-validation-for="FinishTime" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Position" class="form-label"></label>
+                <input asp-for="Position" class="form-control" type="number" min="1" />
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Notes" class="form-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="2"></textarea>
+            </div>
+
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary ms-2">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

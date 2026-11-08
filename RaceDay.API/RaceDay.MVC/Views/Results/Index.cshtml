@@ -1,0 +1,59 @@
+﻿@model List<RaceDay.MVC.Models.ResultViewModel>
+@{
+    ViewData["Title"] = "Results";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold">Results</h3>
+    <a asp-action="Create" class="btn btn-danger">Post Result</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No results posted yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Participant</th>
+                    <th>Event</th>
+                    <th>Finish Time</th>
+                    <th>Position</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@r.ParticipantName</td>
+                        <td>@r.EventName</td>
+                        <td>@r.FinishTime</td>
+                        <td>@r.Position</td>
+                        <td>@r.Notes</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@r.ResultID" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@r.ResultID" method="post" class="d-inline ms-1"
+                                  onsubmit="return confirm('Delete this result?')">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

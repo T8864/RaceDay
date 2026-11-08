@@ -630,8 +630,8 @@
             "nullable": true
           },
           "distance": {
-            "type": "string",
-            "nullable": true
+            "type": "number",
+            "format": "double"
           },
           "routeDescription": {
             "type": "string",
@@ -750,7 +750,8 @@
             "nullable": true
           },
           "distance": {
-            "type": "string",
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "status": {
