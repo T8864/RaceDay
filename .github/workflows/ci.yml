@@ -22,10 +22,10 @@ jobs:
       run: dotnet restore RaceDay.API/RaceDay.API.sln
 
     - name: Build API
-      run: dotnet build RaceDay.API/RaceDay.API.csproj --no-restore -c Release
+      run: dotnet build RaceDay.API/RaceDay.API/RaceDay.API.csproj --no-restore -c Release
 
     - name: Build MVC
       run: dotnet build RaceDay.MVC/RaceDay.MVC.csproj --no-restore -c Release
 
     - name: Run tests
-      run: dotnet test RaceDay.Tests/RaceDay.Tests.csproj --no-restore --verbosity normal
+      run: dotnet test RaceDay.API/RaceDay.Tests/RaceDay.Tests.csproj --no-restore --verbosity normal
