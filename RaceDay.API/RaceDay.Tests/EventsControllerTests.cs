@@ -61,7 +61,7 @@ namespace RaceDay.Tests
                 EventName = "Test Race",
                 EventDate = DateTime.Now.AddDays(30),
                 Location = "Cape Town",
-                Distance = "5km",
+                Distance = 5.0,
                 Status = "Upcoming",
                 MaxParticipants = 100,
                 OrganiserID = 1,
@@ -126,7 +126,7 @@ namespace RaceDay.Tests
                 EventName = "New Race",
                 EventDate = DateTime.Now.AddDays(60),
                 Location = "Johannesburg",
-                Distance = "10km",
+                Distance = 10.0,
                 MaxParticipants = 200,
                 CategoryID = 1
             };

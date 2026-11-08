@@ -51,7 +51,7 @@ namespace RaceDay.Tests
                 EventName = "Test Race",
                 EventDate = DateTime.Now.AddDays(30),
                 Location = "Cape Town",
-                Distance = "5km",
+                Distance = 5.0,
                 Status = "Upcoming",
                 MaxParticipants = 100,
                 OrganiserID = 1,
