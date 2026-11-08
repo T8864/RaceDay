@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  raceday-mvc:
+    build:
+      context: .
+      dockerfile: RaceDay.MVC/Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ApiSettings__BaseUrl=http://host.docker.internal:7174/

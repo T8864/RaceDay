@@ -7,7 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.API", "RaceDay.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.Tests", "RaceDay.Tests\RaceDay.Tests.csproj", "{E564A6DF-7CDE-46AB-A67E-C0BAFA409E19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.MVC", "RaceDay.MVC\RaceDay.MVC.csproj", "{5661C7F1-8554-4737-A110-8F54EB3FE8C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaceDay.MVC", "..\RaceDay.MVC\RaceDay.MVC.csproj", "{3A48EBD4-F713-3E43-71B5-5B588908A659}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +28,10 @@ Global
 		{E564A6DF-7CDE-46AB-A67E-C0BAFA409E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E564A6DF-7CDE-46AB-A67E-C0BAFA409E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E564A6DF-7CDE-46AB-A67E-C0BAFA409E19}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5661C7F1-8554-4737-A110-8F54EB3FE8C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5661C7F1-8554-4737-A110-8F54EB3FE8C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5661C7F1-8554-4737-A110-8F54EB3FE8C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5661C7F1-8554-4737-A110-8F54EB3FE8C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A48EBD4-F713-3E43-71B5-5B588908A659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A48EBD4-F713-3E43-71B5-5B588908A659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A48EBD4-F713-3E43-71B5-5B588908A659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A48EBD4-F713-3E43-71B5-5B588908A659}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
