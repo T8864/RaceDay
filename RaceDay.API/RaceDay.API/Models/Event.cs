@@ -30,6 +30,8 @@ namespace RaceDay.API.Models
 
         public int MaxParticipants { get; set; } = 100;
 
+        public string? ImageBlobUrl { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Foreign Key

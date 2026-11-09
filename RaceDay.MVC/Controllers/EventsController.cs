@@ -44,7 +44,6 @@ namespace RaceDay.MVC.Controllers
             return View(ev);
         }
 
-        // Organiser only
         public IActionResult Create()
         {
             if (HttpContext.Session.GetString("Role") != "Organiser")
@@ -77,6 +76,16 @@ namespace RaceDay.MVC.Controllers
             {
                 ModelState.AddModelError("", "Failed to create event.");
                 return View(model);
+            }
+
+            var created = await response.Content.ReadFromJsonAsync<CreateEventResponse>();
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0 && created != null)
+            {
+                using var content = new MultipartFormDataContent();
+                using var stream = model.ImageFile.OpenReadStream();
+                content.Add(new StreamContent(stream), "file", model.ImageFile.FileName);
+                await client.PostAsync($"api/Events/{created.EventID}/upload-image", content);
             }
 
             TempData["Success"] = "Event created successfully.";
@@ -131,6 +140,14 @@ namespace RaceDay.MVC.Controllers
             {
                 ModelState.AddModelError("", "Failed to update event.");
                 return View(model);
+            }
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                using var content = new MultipartFormDataContent();
+                using var stream = model.ImageFile.OpenReadStream();
+                content.Add(new StreamContent(stream), "file", model.ImageFile.FileName);
+                await client.PostAsync($"api/Events/{id}/upload-image", content);
             }
 
             TempData["Success"] = "Event updated.";

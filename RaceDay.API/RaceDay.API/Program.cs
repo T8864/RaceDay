@@ -47,6 +47,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // JWT Service
 builder.Services.AddScoped<JwtService>();
 
+// Blob Service
+builder.Services.AddSingleton<BlobService>();
+
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

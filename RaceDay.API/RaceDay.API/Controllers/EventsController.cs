@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using RaceDay.API.Services;
 using System.Security.Claims;
 
 namespace RaceDay.API.Controllers
@@ -12,10 +13,12 @@ namespace RaceDay.API.Controllers
     public class EventsController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly BlobService _blobService;
 
-        public EventsController(AppDbContext context)
+        public EventsController(AppDbContext context, BlobService blobService)
         {
             _context = context;
+            _blobService = blobService;
         }
 
         [HttpGet]
@@ -31,7 +34,8 @@ namespace RaceDay.API.Controllers
                 e.Status,
                 e.MaxParticipants,
                 e.OrganiserID,
-                e.CategoryID
+                e.CategoryID,
+                e.ImageBlobUrl
             }).ToList();
 
             return Ok(events);
@@ -69,6 +73,29 @@ namespace RaceDay.API.Controllers
             _context.SaveChanges();
 
             return StatusCode(201, new { message = "Event created successfully", eventID = newEvent.EventID });
+        }
+
+        [HttpPost("{id}/upload-image")]
+        [Authorize(Roles = "Organiser")]
+        public async Task<IActionResult> UploadImage(int id, IFormFile file)
+        {
+            var userID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var e = _context.Events.FirstOrDefault(e => e.EventID == id);
+            if (e == null)
+                return NotFound(new { message = "Event not found" });
+
+            if (e.OrganiserID != userID)
+                return StatusCode(403, new { message = "Forbidden - you can only upload images for your own events" });
+
+            if (file == null || file.Length == 0)
+                return BadRequest(new { message = "No file provided" });
+
+            var imageUrl = await _blobService.UploadImageAsync(file);
+            e.ImageBlobUrl = imageUrl;
+            _context.SaveChanges();
+
+            return Ok(new { message = "Image uploaded successfully", imageUrl });
         }
 
         [HttpPut("{id}")]

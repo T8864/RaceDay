@@ -96,10 +96,8 @@ namespace RaceDay.API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Distance")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<double>("Distance")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
@@ -108,6 +106,9 @@ namespace RaceDay.API.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ImageBlobUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
                         .IsRequired()

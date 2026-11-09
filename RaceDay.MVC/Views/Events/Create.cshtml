@@ -5,10 +5,10 @@
 
 <div class="card shadow-sm">
     <div class="card-header bg-danger text-white">
-        <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Event</h4>
+        <h4 class="mb-0">Create New Event</h4>
     </div>
     <div class="card-body p-4">
-        <form asp-action="Create" method="post">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
@@ -54,6 +54,12 @@
             <div class="mb-3">
                 <label asp-for="RouteDescription" class="form-label"></label>
                 <textarea asp-for="RouteDescription" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ImageFile" class="form-label">Event Image (optional)</label>
+                <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                <div class="form-text">Upload an image for this event.</div>
             </div>
 
             <a asp-action="Index" class="btn btn-secondary">Cancel</a>
