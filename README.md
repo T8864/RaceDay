@@ -1,59 +1,56 @@
-# RaceDay - Race Event Management System
+# RaceDay
 
-## System Description
-RaceDay is a web-based race event management system built with ASP.NET Core Web API. It allows Organisers to create and manage race events and Participants to browse and enrol in those events. The system uses JWT authentication and role-based authorization to control access.
+A race event management web application built with ASP.NET Core.
 
-## Roles
+## Projects
 
-### Organiser
-- Register and log in to the system
-- Create, update and delete race events
-- Manage race categories
-- View all enrolments for events
-- Capture and update race results for participants
+- **RaceDay.API** - REST API (ASP.NET Core Web API, .NET 8)
+- **RaceDay.MVC** - Web frontend (ASP.NET Core MVC, .NET 8)
+- **RaceDay.Tests** - Unit tests (xUnit)
 
-### Participant
-- Register and log in to the system
-- Browse all upcoming race events
-- Enrol in events under a specific category
-- View their own enrolments
-- View their personal race results
+## Prerequisites
 
-## Project Structure
-/docs
-RaceDay_Complete.sql (Part 1 SQL script)
-RaceDay_SeedData.sql (Seed data script)
-RaceDay_API_Endpoints.txt (API endpoint plan)
-RaceDay_ERD.png (Entity Relationship Diagram)
-ci-screenshot.png (CI/CD green build screenshot)
+- .NET 8 SDK
+- SQL Server Express
+- Docker Desktop
+- Azurite (Azure Storage Emulator)
 
-/RaceDay.API
-Controllers/ (API controllers)
-Models/ (Entity models)
-DTOs/ (Data transfer objects)
-Data/ (Database context)
-Services/ (JWT service)
+## Running the API
 
-/RaceDay.Tests
-Unit tests for Auth, Events and Enrolments
+1. Open `RaceDay.API/RaceDay.API.sln` in Visual Studio
+2. Set connection string in `RaceDay.API/appsettings.json`
+3. Run database migrations:
+
+Update-Database
+
+4. Start the API project (runs on https://localhost:7174)
+
+## Running the MVC
+
+1. Open terminal in the RaceDay root folder
+2. Run:
+
+dotnet run --project RaceDay.MVC/RaceDay.MVC.csproj
 
 
-## Setup Instructions
-1. Clone the repository
-2. Open RaceDay.API.sln in Visual Studio
-3. Update the connection string in appsettings.json to match your SQL Server instance
-4. Run database migrations: Update-Database in Package Manager Console
-5. Run the project and open Swagger at https://localhost:7174/swagger
+## Running with Docker
 
-## Authentication
-The API uses JWT Bearer authentication. To access protected endpoints:
-1. Register a user via POST /api/Auth/register
-2. Login via POST /api/Auth/login to get a JWT token
-3. Click Authorize in Swagger and paste the token
-4. All protected endpoints will now be accessible based on your role
+1. Make sure the API is running on port 7174
+2. From the RaceDay root folder run:
+
+docker-compose up --build
+
+3. Open browser at http://localhost:8080
+
+## Azure Blob Storage
+
+This project uses Azurite for local blob storage emulation. Start Azurite before running the application:
+
+azurite --silent --location c:\azurite --debug c:\azurite\debug.log
+
+
+Images uploaded to events are stored in the `event-images` container.
 
 ## CI/CD
-![CI Build](docs/ci-screenshot.png)
 
-## Video Presentation
-[RaceDay System Walkthrough](https://youtu.be/NAD16ToIAAU?si=o-AFuiEPJMGqSE36)
+GitHub Actions pipeline runs on every push to main. See `.github/workflows/ci.yml`.
