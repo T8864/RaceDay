@@ -5,6 +5,7 @@ using RaceDay.API.Controllers;
 using RaceDay.API.Data;
 using RaceDay.API.Models;
 using RaceDay.API.DTOs;
+using RaceDay.API.Services;
 using System.Security.Claims;
 
 namespace RaceDay.Tests
@@ -21,7 +22,7 @@ namespace RaceDay.Tests
 
         private EventsController GetControllerWithUser(AppDbContext context, int userId, string role)
         {
-            var controller = new EventsController(context);
+            var controller = new EventsController(context, null!);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
